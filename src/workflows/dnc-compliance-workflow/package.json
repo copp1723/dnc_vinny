@@ -1,0 +1,73 @@
+{
+  "name": "dnc-compliance-workflow",
+  "version": "1.0.0",
+  "description": "End-to-end DNC compliance workflow for automotive dealerships",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/cli.js",
+    "dev": "ts-node cli.ts",
+    "dnc:run": "node dist/cli.js run -c",
+    "dnc:schedule": "node dist/cli.js schedule -c",
+    "dnc:resume": "node dist/cli.js resume -c",
+    "dnc:status": "node dist/cli.js status -c",
+    "dnc:config": "node dist/cli.js config",
+    "dnc:config:create": "node dist/cli.js config --create",
+    "dnc:config:validate": "node dist/cli.js config --validate",
+    "example:run": "ts-node example-runner.ts 1",
+    "example:resume": "ts-node example-runner.ts 2",
+    "example:schedule": "ts-node example-runner.ts 3",
+    "example:monitor": "ts-node example-runner.ts 4",
+    "example:custom": "ts-node example-runner.ts 5",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint . --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "bin": {
+    "dnc-workflow": "./dist/cli.js"
+  },
+  "keywords": [
+    "dnc",
+    "compliance",
+    "workflow",
+    "automotive",
+    "dealership",
+    "vinsolutions",
+    "possiblenow"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "playwright": "^1.40.0",
+    "commander": "^11.0.0",
+    "inquirer": "^9.2.0",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1",
+    "node-cron": "^3.0.3",
+    "fs-extra": "^11.2.0",
+    "date-fns": "^3.0.0",
+    "exceljs": "^4.4.0",
+    "pdfkit": "^0.14.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/inquirer": "^9.0.0",
+    "@types/node-cron": "^3.0.0",
+    "@types/fs-extra": "^11.0.0",
+    "@types/pdfkit": "^0.13.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "ts-jest": "^29.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

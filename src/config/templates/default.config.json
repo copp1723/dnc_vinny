@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "environment": "development",
+  "dealerships": [
+    {
+      "id": "example_dealership",
+      "name": "Example Dealership",
+      "active": true,
+      "vinSolutions": {
+        "baseUrl": "https://api.vinsolutions.com",
+        "apiKey": "your-api-key-here",
+        "apiSecret": "your-api-secret-here",
+        "dealershipId": "12345",
+        "timeout": 30000,
+        "retryAttempts": 3,
+        "retryDelay": 1000
+      },
+      "possibleNOW": {
+        "baseUrl": "https://api.possiblenow.com",
+        "username": "your-username",
+        "password": "your-password",
+        "accountId": "your-account-id",
+        "apiVersion": "v1",
+        "timeout": 30000,
+        "retryAttempts": 3
+      },
+      "workflow": {
+        "batchSize": 100,
+        "maxConcurrent": 5,
+        "processingDelay": 1000,
+        "errorThreshold": 10,
+        "retryPolicy": {
+          "maxRetries": 3,
+          "backoffMultiplier": 2,
+          "maxBackoffMs": 60000
+        },
+        "timeout": {
+          "job": 300000,
+          "batch": 600000,
+          "total": 3600000
+        }
+      },
+      "reports": {
+        "outputDirectory": "./reports",
+        "format": "json",
+        "includeMetrics": true,
+        "compression": false,
+        "retention": {
+          "enabled": true,
+          "days": 30
+        },
+        "notifications": {
+          "enabled": false,
+          "email": "reports@example.com",
+          "webhook": "https://your-webhook-url.com/reports"
+        }
+      },
+      "schedule": {
+        "enabled": true,
+        "timezone": "America/Los_Angeles",
+        "jobs": [
+          {
+            "name": "Daily DNC Sync",
+            "type": "dnc_sync",
+            "cron": "0 2 * * *",
+            "enabled": true,
+            "config": {
+              "fullSync": false
+            }
+          },
+          {
+            "name": "Weekly Full Sync",
+            "type": "dnc_sync",
+            "cron": "0 3 * * 0",
+            "enabled": true,
+            "config": {
+              "fullSync": true
+            }
+          },
+          {
+            "name": "Daily Report",
+            "type": "report_generation",
+            "cron": "0 6 * * *",
+            "enabled": true,
+            "config": {
+              "reportType": "daily_summary"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "security": {
+    "encryption": {
+      "algorithm": "aes-256-gcm",
+      "keyDerivation": "pbkdf2",
+      "saltLength": 32,
+      "iterations": 100000
+    },
+    "authentication": {
+      "required": true,
+      "type": "api_key",
+      "sessionTimeout": 3600000
+    },
+    "audit": {
+      "enabled": true,
+      "logLevel": "info",
+      "retentionDays": 90
+    }
+  },
+  "global": {
+    "logLevel": "info",
+    "tempDirectory": "./temp",
+    "dataDirectory": "./data",
+    "healthCheck": {
+      "enabled": true,
+      "interval": 60000,
+      "timeout": 10000
+    }
+  },
+  "features": {
+    "autoSync": true,
+    "webhooks": true,
+    "reporting": true,
+    "scheduling": true
+  }
+}

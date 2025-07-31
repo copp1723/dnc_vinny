@@ -1,0 +1,30 @@
+{
+  "name": "@dnc-vinny/customer-search",
+  "version": "1.0.0",
+  "description": "Customer search and navigation module for VinSolutions DNC compliance",
+  "main": "index.ts",
+  "types": "index.ts",
+  "scripts": {
+    "example": "ts-node example.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "vinsolutions",
+    "customer-search",
+    "dnc",
+    "crm",
+    "automation"
+  ],
+  "dependencies": {
+    "playwright": "^1.40.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.0.0"
+  },
+  "files": [
+    "*.ts",
+    "README.md"
+  ]
+}
