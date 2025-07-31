@@ -4,6 +4,7 @@ import { ComplianceTracker } from './ComplianceTracker';
 import { AlertManager } from './AlertManager';
 import { ReportEngine } from './ReportEngine';
 import { logger } from '../../priority5-compliance/logger';
+import { validateNumber, validateDealershipId, validateAlertId, validateSeverity, validateUsername } from '../utils/validation';
 
 export class DashboardAPI {
   private router: Router;

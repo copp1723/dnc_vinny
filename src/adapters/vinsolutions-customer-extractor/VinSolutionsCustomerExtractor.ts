@@ -1,6 +1,5 @@
 import { chromium, Browser, Page } from 'playwright';
 import path from 'path';
-import fs from 'fs-extra';
 import { FileManager } from './utils/FileManager';
 import { CSVStreamParser } from './utils/CSVStreamParser';
 import { PhoneNumberUtils } from './utils/PhoneNumberUtils';
@@ -185,7 +184,7 @@ export class VinSolutionsCustomerExtractor {
       return false;
 
     } catch (error) {
-      console.log(`❌ Login error: ${error.message}`);
+      console.log(`❌ Login error: ${error instanceof Error ? error.message : String(error)}`);
       await this.takeScreenshot('07_login_error');
       return false;
     }
@@ -304,7 +303,7 @@ export class VinSolutionsCustomerExtractor {
       return true;
 
     } catch (error) {
-      console.log(`❌ Navigation error: ${error.message}`);
+      console.log(`❌ Navigation error: ${error instanceof Error ? error.message : String(error)}`);
       await this.takeScreenshot('11_navigation_error');
       return false;
     }
@@ -400,7 +399,7 @@ export class VinSolutionsCustomerExtractor {
       return true;
 
     } catch (error) {
-      console.log(`❌ Date range selection error: ${error.message}`);
+      console.log(`❌ Date range selection error: ${error instanceof Error ? error.message : String(error)}`);
       return true; // Continue anyway
     }
   }
@@ -423,14 +422,12 @@ export class VinSolutionsCustomerExtractor {
       const reportTexts = reportTypeMap[reportType] || ['Export', 'Download'];
 
       // Look for specific report type
-      let reportFound = false;
       for (const reportText of reportTexts) {
         try {
           const reportElement = await this.page.locator(`text="${reportText}"`).first();
           if (await reportElement.isVisible({ timeout: 5000 })) {
             await reportElement.click();
             console.log(`✅ Selected report: ${reportText}`);
-            reportFound = true;
             break;
           }
         } catch (e) {
@@ -480,7 +477,7 @@ export class VinSolutionsCustomerExtractor {
             break;
           }
         } catch (e) {
-          console.log(`Export attempt failed: ${e.message}`);
+          console.log(`Export attempt failed: ${e instanceof Error ? e.message : String(e)}`);
           continue;
         }
       }
@@ -524,7 +521,7 @@ export class VinSolutionsCustomerExtractor {
       return downloadPath;
 
     } catch (error) {
-      console.log(`❌ Data extraction error: ${error.message}`);
+      console.log(`❌ Data extraction error: ${error instanceof Error ? error.message : String(error)}`);
       await this.takeScreenshot('16_extraction_error');
       return null;
     }
@@ -568,7 +565,7 @@ export class VinSolutionsCustomerExtractor {
       return customers;
 
     } catch (error) {
-      console.error(`❌ CSV parsing error: ${error.message}`);
+      console.error(`❌ CSV parsing error: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
@@ -667,7 +664,7 @@ export class VinSolutionsCustomerExtractor {
         success: false,
         reportName: 'Customer Extract',
         reportType: options.reportType,
-        error: `Unexpected error: ${error.message}`,
+        error: `Unexpected error: ${error instanceof Error ? error.message : String(error)}`,
         screenshots: this.screenshots
       };
     } finally {
@@ -698,7 +695,7 @@ export class VinSolutionsCustomerExtractor {
       yield* parser.parseCustomerData(result.filePath);
 
     } catch (error) {
-      console.error(`❌ Streaming error: ${error.message}`);
+      console.error(`❌ Streaming error: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }

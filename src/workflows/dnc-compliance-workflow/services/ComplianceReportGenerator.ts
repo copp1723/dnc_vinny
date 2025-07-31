@@ -2,19 +2,17 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { format } from 'date-fns';
 import * as ExcelJS from 'exceljs';
-import * as PDFDocument from 'pdfkit';
+import PDFDocument from 'pdfkit';
 import { ReportingConfig, DealershipConfig, TaskResult } from '../types';
-import { Logger } from '../../../../utils/Logger';
+import logger from '../../../../utils/Logger';
 
 /**
  * Compliance Report Generator
  * Generates comprehensive DNC compliance reports in multiple formats
  */
 export class ComplianceReportGenerator {
-  private logger: Logger;
   
   constructor(private config: ReportingConfig) {
-    this.logger = new Logger('ComplianceReportGenerator');
   }
 
   /**
@@ -60,10 +58,10 @@ export class ComplianceReportGenerator {
         }
         
         reports.push({ filePath, format });
-        this.logger.info(`Generated ${format.toUpperCase()} report: ${filePath}`);
+        logger.info(`Generated ${format.toUpperCase()} report: ${filePath}`);
         
       } catch (error) {
-        this.logger.error(`Failed to generate ${format} report: ${error}`);
+        logger.error(`Failed to generate ${format} report: ${error}`);
       }
     }
 
@@ -113,7 +111,7 @@ export class ComplianceReportGenerator {
     doc.fontSize(16).text('Workflow Execution Details', { underline: true });
     doc.fontSize(10);
     
-    const tasks = Array.from(data.results.values());
+    const tasks = Array.from(data.results.values()) as TaskResult[];
     for (const task of tasks) {
       doc.text(`• ${task.taskId}: ${task.success ? '✓' : '✗'} (${(task.duration / 1000).toFixed(1)}s)`);
       if (task.error) {
@@ -149,7 +147,7 @@ export class ComplianceReportGenerator {
 
     doc.end();
     
-    await new Promise((resolve) => stream.on('finish', resolve));
+    await new Promise<void>((resolve) => stream.on('finish', () => resolve()));
     return filePath;
   }
 
@@ -197,7 +195,7 @@ export class ComplianceReportGenerator {
       { header: 'Error', key: 'error', width: 50 }
     ];
 
-    const tasks = Array.from(data.results.values());
+    const tasks = Array.from(data.results.values()) as TaskResult[];
     taskSheet.addRows(tasks.map(task => ({
       taskId: task.taskId,
       status: task.success ? 'Success' : 'Failed',
@@ -324,7 +322,7 @@ export class ComplianceReportGenerator {
                 </tr>
             </thead>
             <tbody>
-                ${Array.from(data.results.values()).map(task => `
+                ${(Array.from(data.results.values()) as TaskResult[]).map(task => `
                     <tr>
                         <td>${task.taskId}</td>
                         <td class="${task.success ? 'success' : 'failed'}">${task.success ? '✓ Success' : '✗ Failed'}</td>
@@ -360,8 +358,8 @@ export class ComplianceReportGenerator {
    */
   private async sendReportEmail(data: any, reports: any[]): Promise<void> {
     // This is a placeholder - implement with your email service
-    this.logger.info(`Email notification would be sent to: ${this.config.emailRecipients?.join(', ')}`);
-    this.logger.info(`Reports attached: ${reports.map(r => r.format).join(', ')}`);
+    logger.info(`Email notification would be sent to: ${this.config.emailRecipients?.join(', ')}`);
+    logger.info(`Reports attached: ${reports.map(r => r.format).join(', ')}`);
   }
 
   /**
@@ -381,7 +379,7 @@ export class ComplianceReportGenerator {
       
       if (stats.mtime < cutoffDate && file.startsWith('dnc_compliance_report_')) {
         await fs.remove(filePath);
-        this.logger.info(`Removed old report: ${file}`);
+        logger.info(`Removed old report: ${file}`);
       }
     }
   }

@@ -3,6 +3,19 @@ import { DealershipConfig } from './config/schemas';
 
 /**
  * DNC VINNY - Main Application Entry Point
+ * 
+ * This is the main application class that orchestrates the DNC (Do Not Call) compliance system.
+ * It handles configuration management, dealership processing, and scheduled job execution.
+ * 
+ * @example
+ * ```typescript
+ * const app = new DNCVinnyApp({
+ *   configPath: './config',
+ *   masterPassword: process.env.MASTER_PASSWORD
+ * });
+ * await app.initialize();
+ * await app.run();
+ * ```
  */
 class DNCVinnyApp {
   private configManager: ConfigManager;
@@ -15,6 +28,8 @@ class DNCVinnyApp {
 
   /**
    * Initialize the application
+   * Sets up configuration management and validates the configuration
+   * @throws {Error} If configuration validation fails
    */
   async initialize(): Promise<void> {
     console.log('🚀 Starting DNC VINNY...\n');
@@ -87,6 +102,10 @@ class DNCVinnyApp {
 
   /**
    * Process a single dealership
+   * This method would integrate with VinSolutions and PossibleNOW services
+   * to perform DNC compliance checks
+   * 
+   * @param dealership - The dealership configuration to process
    */
   private async processDealership(dealership: DealershipConfig): Promise<void> {
     console.log(`\n🏪 Processing: ${dealership.name}`);

@@ -24,30 +24,39 @@ export class VinSolutionsExtractor {
   private fileManager = new FileManager();
 
   async initialize(): Promise<void> {
-    console.log('🚀 Initializing VinSolutions extractor...');
-    
-    this.browser = await chromium.launch({
-      headless: false, // Show browser so you can see what's happening
-      slowMo: 1000,    // Slow down actions so you can follow along
-      timeout: 60000
-    });
-
-    this.page = await this.browser.newPage({
-      viewport: { width: 1920, height: 1080 }
-    });
-
-    // Set up download handling
-    this.page.on('download', async (download) => {
-      const filename = download.suggestedFilename();
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const downloadPath = path.join('./downloads', `${timestamp}_${filename}`);
+    try {
+      console.log('🚀 Initializing VinSolutions extractor...');
       
-      await this.fileManager.ensureDirectory('./downloads');
-      await download.saveAs(downloadPath);
-      console.log(`📥 Downloaded: ${downloadPath}`);
-    });
+      this.browser = await chromium.launch({
+        headless: false, // Show browser so you can see what's happening
+        slowMo: 1000,    // Slow down actions so you can follow along
+        timeout: 60000
+      });
 
-    console.log('✅ Browser initialized');
+      this.page = await this.browser.newPage({
+        viewport: { width: 1920, height: 1080 }
+      });
+
+      // Set up download handling
+      this.page.on('download', async (download) => {
+        try {
+          const filename = download.suggestedFilename();
+          const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+          const downloadPath = path.join('./downloads', `${timestamp}_${filename}`);
+          
+          await this.fileManager.ensureDirectory('./downloads');
+          await download.saveAs(downloadPath);
+          console.log(`📥 Downloaded: ${downloadPath}`);
+        } catch (error) {
+          console.error(`❌ Download error: ${error instanceof Error ? error.message : String(error)}`);
+        }
+      });
+
+      console.log('✅ Browser initialized');
+    } catch (error) {
+      console.error(`❌ Failed to initialize browser: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
   }
 
   async takeScreenshot(name: string): Promise<string> {

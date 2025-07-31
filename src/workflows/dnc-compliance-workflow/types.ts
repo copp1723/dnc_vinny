@@ -2,6 +2,9 @@ import { TaskResult } from '../../../priority3-orchestration/TaskOrchestrator';
 import { VinSolutionsCredentials } from '../../adapters/vinsolutions-customer-extractor/types';
 import { PossibleNOWConfig } from '../../api-clients/possiblenow/types';
 
+// Re-export TaskResult for services that need it
+export { TaskResult };
+
 /**
  * Dealership configuration
  */

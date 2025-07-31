@@ -153,6 +153,14 @@ export class PossibleNOWClient {
           request
         );
 
+        if (!response.data || !response.data.batchId) {
+          throw new PossibleNOWAPIError(
+            'Invalid response from API - missing batch ID',
+            'INVALID_RESPONSE',
+            500
+          );
+        }
+
         logger.info('DNC batch submitted successfully', {
           batchId: response.data.batchId,
           status: response.data.status
